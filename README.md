@@ -153,14 +153,14 @@ dotnet run
 La API iniciará normalmente en:
 
 - `https://localhost:5001`
-- `http://localhost:5000`
+- `http://localhost:5134`
 
 ### 4️⃣ Probar desde Swagger
 
 Navegar a:
 
 ```text
-https://localhost:5001/swagger
+http://localhost:5134/swagger
 ```
 
 Ahí verás todos los endpoints documentados y podrás ejecutarlos directamente.
@@ -172,7 +172,7 @@ Ahí verás todos los endpoints documentados y podrás ejecutarlos directamente.
 Base URL local (ejemplo):
 
 ```text
-https://localhost:5001/api/libros
+http://localhost:5134/api/libros
 ```
 
 ### 1️⃣ Listar todos los libros
@@ -306,6 +306,34 @@ curl -X POST https://localhost:5001/api/libros   -H "Content-Type: application/j
     "isbn": "9781234567890"
   }'
 ```
+
+## 📮 Colección de Postman
+
+El proyecto incluye una colección de Postman lista para probar todos los endpoints de la API.
+
+Archivo:
+
+- [`postman/BibliotecaApi.postman_collection.json`](postman/BibliotecaApi.postman_collection.json)
+
+### Cómo usarla
+
+1. Abrir **Postman**.
+2. Ir a **Import**.
+3. Seleccionar el archivo `BibliotecaApi.postman_collection.json`.
+4. Configurar la variable `baseUrl` (opcional):
+   - Por defecto está en `https://localhost:5001`.
+   - Si la API corre en otro puerto, actualizar la variable en Postman.
+
+La colección contiene:
+
+- `GET /api/libros` – Listar libros activos  
+- `GET /api/libros/{id}` – Obtener libro por ID  
+- `POST /api/libros` – Crear libro (con todos los campos)  
+- `PUT /api/libros/{id}` – Actualizar libro  
+- `DELETE /api/libros/{id}` – Eliminar (lógico) libro
+
+
+
 
 ---
 
