@@ -1,0 +1,13 @@
+# Carpetas de build de .NET
+bin/
+obj/
+
+# Configuración local de Visual Studio
+.vs/
+*.user
+*.suo
+
+# Archivos temporales
+*.log
+*.cache
+*.db
