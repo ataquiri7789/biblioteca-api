@@ -6,7 +6,7 @@ Incluye:
 
 - ✔ Arquitectura en capas / limpia (Domain, Application, Infrastructure, Api)  
 - ✔ CRUD de Libros (crear, leer, actualizar, eliminar lógico)  
-- ✔ Base de datos PostgreSQL con **tabla**, **vista** y **procedimientos almacenados**  
+- ✔ Base de datos PostgreSQL con **tabla**, **vista** 
 - ✔ Script SQL unificado (`db/script.txt`)  
 - ✔ Swagger para probar los endpoints  
 - ✔ Instrucciones claras para ejecutar la solución localmente  
