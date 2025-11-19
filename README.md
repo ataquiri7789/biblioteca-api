@@ -47,10 +47,6 @@ Este archivo contiene:
 - Creación de la base de datos `biblioteca_db`
 - Creación de la tabla `libros`
 - Creación de la vista `vw_libros_activos`
-- Procedimientos almacenados:
-  - `sp_insertar_libro`
-  - `sp_actualizar_libro`
-  - `sp_eliminar_libro`
 - 3 registros de ejemplo relacionados con **bioquímica**
 
 ### 🔹 Uso del script en PostgreSQL
