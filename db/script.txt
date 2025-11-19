@@ -1,0 +1,106 @@
+CREATE DATABASE biblioteca_db;
+
+
+
+CREATE TABLE IF NOT EXISTS libros (
+    id               SERIAL PRIMARY KEY,
+    titulo           VARCHAR(200) NOT NULL,
+    autor            VARCHAR(150) NOT NULL,
+    anio_publicacion INT NOT NULL CHECK (anio_publicacion BETWEEN 1450 AND 2100),
+    editorial        VARCHAR(150),
+    paginas          INT NOT NULL CHECK (paginas > 0),
+    categoria        VARCHAR(100),
+    isbn             VARCHAR(20),
+    activo           BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+
+CREATE OR REPLACE VIEW vw_libros_activos AS
+SELECT 
+    id,
+    titulo,
+    autor,
+    anio_publicacion,
+    editorial,
+    paginas,
+    categoria,
+    isbn,
+    activo
+FROM libros
+WHERE activo = TRUE;
+
+
+CREATE OR REPLACE PROCEDURE sp_insertar_libro(
+    IN p_titulo           VARCHAR,
+    IN p_autor            VARCHAR,
+    IN p_anio_publicacion INT,
+    IN p_editorial        VARCHAR,
+    IN p_paginas          INT,
+    IN p_categoria        VARCHAR,
+    IN p_isbn             VARCHAR,
+    OUT p_id              INT
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO libros(titulo, autor, anio_publicacion, editorial, paginas, categoria, isbn)
+    VALUES(p_titulo, p_autor, p_anio_publicacion, p_editorial, p_paginas, p_categoria, p_isbn)
+    RETURNING id INTO p_id;
+END;
+$$;
+
+
+CREATE OR REPLACE PROCEDURE sp_actualizar_libro(
+    IN  p_id              INT,
+    IN  p_titulo          VARCHAR,
+    IN  p_autor           VARCHAR,
+    IN  p_anio_publicacion INT,
+    IN  p_editorial       VARCHAR,
+    IN  p_paginas         INT,
+    IN  p_categoria       VARCHAR,
+    IN  p_isbn            VARCHAR,
+    OUT p_filas_afectadas INT
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE libros
+    SET titulo           = p_titulo,
+        autor            = p_autor,
+        anio_publicacion = p_anio_publicacion,
+        editorial        = p_editorial,
+        paginas          = p_paginas,
+        categoria        = p_categoria,
+        isbn             = p_isbn
+    WHERE id = p_id
+      AND activo = TRUE;
+
+    GET DIAGNOSTICS p_filas_afectadas = ROW_COUNT;
+END;
+$$;
+
+
+CREATE OR REPLACE PROCEDURE sp_eliminar_libro(
+    IN  p_id              INT,
+    OUT p_filas_afectadas INT
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE libros
+    SET activo = FALSE
+    WHERE id = p_id
+      AND activo = TRUE;
+
+    GET DIAGNOSTICS p_filas_afectadas = ROW_COUNT;
+END;
+$$;
+
+
+
+INSERT INTO libros (titulo, autor, anio_publicacion, editorial, paginas, categoria, isbn)
+VALUES
+('Bioquímica Médica Esencial', 'Juan Carlos Rivas', 2021, 'Editorial Médica Panamericana', 520, 'Bioquímica', '9789581234570'),
+('Fundamentos de Bioquímica: Enfoque Clínico', 'María Fernanda Delgado', 2019, 'McGraw-Hill Educación', 680, 'Bioquímica Clínica', '9786071503214'),
+('Metabolismo Humano y Regulación Bioquímica', 'Luis Alberto Paredes', 2020, 'Editorial Científica Latinoamericana', 430, 'Metabolismo', '9786123456789');
+
