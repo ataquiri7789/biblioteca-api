@@ -232,7 +232,6 @@ POST /api/libros
 **Notas:**
 
 - El endpoint valida los campos (título, autor, rangos de año, páginas, etc.).
-- Internamente se invoca el procedimiento almacenado `sp_insertar_libro`.
 
 ---
 
@@ -261,7 +260,6 @@ PUT /api/libros/{id}
 **Notas:**
 
 - Si el libro no existe o está inactivo, se devuelve **404 Not Found**.
-- Internamente se invoca el procedimiento almacenado `sp_actualizar_libro`.
 
 ---
 
@@ -276,7 +274,6 @@ DELETE /api/libros/{id}
 **Descripción:**
 
 - No se elimina físicamente el registro, solo se marca con `activo = FALSE`.
-- Internamente se usa el procedimiento `sp_eliminar_libro`.
 
 **Respuesta:**
 
@@ -321,7 +318,7 @@ Archivo:
 2. Ir a **Import**.
 3. Seleccionar el archivo `BibliotecaApi.postman_collection.json`.
 4. Configurar la variable `baseUrl` (opcional):
-   - Por defecto está en `https://localhost:5001`.
+   - Por defecto está en `http://localhost:5134`.
    - Si la API corre en otro puerto, actualizar la variable en Postman.
 
 La colección contiene:
