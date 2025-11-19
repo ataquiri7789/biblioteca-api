@@ -306,7 +306,7 @@ El proyecto incluye una colección de Postman lista para probar todos los endpoi
 
 Archivo:
 
-- [`postman/BibliotecaApi - CRUD Libros.postman_collection.json`](postman/BibliotecaApi - CRUD Libros.postman_collection.json)
+- [`postman/BibliotecaApi - CRUD Libros.postman_collection.json`]
 
 ### Cómo usarla
 
