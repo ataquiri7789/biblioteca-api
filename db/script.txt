@@ -38,7 +38,7 @@ CREATE OR REPLACE PROCEDURE sp_insertar_libro(
     IN p_paginas          INT,
     IN p_categoria        VARCHAR,
     IN p_isbn             VARCHAR,
-    OUT p_id              INT
+    INOUT p_id            INT
 )
 LANGUAGE plpgsql
 AS $$
@@ -81,20 +81,20 @@ $$;
 
 
 CREATE OR REPLACE PROCEDURE sp_eliminar_libro(
-    IN  p_id              INT,
-    OUT p_filas_afectadas INT
+    p_id INTEGER,
+    p_filas_afectadas OUT INTEGER
 )
 LANGUAGE plpgsql
 AS $$
 BEGIN
     UPDATE libros
     SET activo = FALSE
-    WHERE id = p_id
-      AND activo = TRUE;
+    WHERE id = p_id;
 
     GET DIAGNOSTICS p_filas_afectadas = ROW_COUNT;
 END;
 $$;
+
 
 
 

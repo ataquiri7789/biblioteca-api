@@ -31,31 +31,35 @@ public class LibrosController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<LibroLeerDto>> Crear([FromBody] LibroCrearDto dto)
+    public async Task<ActionResult> Crear([FromBody] LibroCrearDto dto)
     {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
-
-        var creado = await _servicio.CrearAsync(dto);
-        return CreatedAtAction(nameof(Obtener), new { id = creado.Id }, creado);
+        var resultado = await _servicio.CrearAsync(dto);
+        return Ok(resultado);
     }
+
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> Actualizar(int id, [FromBody] LibroActualizarDto dto)
+    public async Task<ActionResult> Actualizar(int id, [FromBody] LibroActualizarDto dto)
     {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
+        var resultado = await _servicio.ActualizarAsync(id, dto);
 
-        var ok = await _servicio.ActualizarAsync(id, dto);
-        if (!ok) return NotFound();
+        if (resultado is null)
+            return NotFound(new { Mensaje = "No existe un libro con ese ID" });
 
-        return NoContent();
+        return Ok(resultado);
     }
+
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Eliminar(int id)
+    public async Task<ActionResult> Eliminar(int id)
     {
-        var ok = await _servicio.EliminarAsync(id);
-        if (!ok) return NotFound();
+        var resultado = await _servicio.EliminarAsync(id);
 
-        return NoContent();
+        if (resultado is null)
+            return NotFound(new { Mensaje = "No existe un libro con ese ID" });
+
+        return Ok(resultado);
     }
+
+
 }

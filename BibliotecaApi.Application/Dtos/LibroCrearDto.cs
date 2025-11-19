@@ -10,13 +10,13 @@ public class LibroCrearDto
     [Required, MaxLength(150)]
     public string Autor { get; set; } = null!;
 
-    [Range(1000, 2100)]
+    [Range(1000, 9999)]
     public int AnioPublicacion { get; set; }
 
     [MaxLength(150)]
     public string? Editorial { get; set; }
 
-    [Range(1, 10000)]
+    [Range(1, 100000)]
     public int Paginas { get; set; }
 
     [MaxLength(100)]

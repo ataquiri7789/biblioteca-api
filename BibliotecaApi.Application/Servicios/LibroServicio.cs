@@ -24,7 +24,7 @@ public class LibroServicio : ILibroServicio
         return libro is null ? null : MapearALeerDto(libro);
     }
 
-    public async Task<LibroLeerDto> CrearAsync(LibroCrearDto dto)
+    public async Task<RespuestaDto<LibroLeerDto>> CrearAsync(LibroCrearDto dto)
     {
         var libro = new Libro
         {
@@ -34,36 +34,86 @@ public class LibroServicio : ILibroServicio
             Editorial = dto.Editorial,
             Paginas = dto.Paginas,
             Categoria = dto.Categoria,
-            Isbn = dto.Isbn
+            Isbn = dto.Isbn,
+            Activo = true
         };
 
         var id = await _repositorio.CrearAsync(libro);
         var creado = await _repositorio.ObtenerPorIdAsync(id)
-                     ?? throw new InvalidOperationException("No se pudo recuperar el libro recién creado.");
+                     ?? throw new InvalidOperationException("No se pudo obtener el libro creado.");
 
-        return MapearALeerDto(creado);
+        return new RespuestaDto<LibroLeerDto>
+        {
+            Mensaje = "El libro fue registrado correctamente",
+            Datos = new LibroLeerDto
+            {
+                Id = creado.Id,
+                Titulo = creado.Titulo,
+                Autor = creado.Autor,
+                AnioPublicacion = creado.AnioPublicacion,
+                Editorial = creado.Editorial,
+                Paginas = creado.Paginas,
+                Categoria = creado.Categoria,
+                Isbn = creado.Isbn
+            }
+        };
     }
 
-    public async Task<bool> ActualizarAsync(int id, LibroActualizarDto dto)
+
+    public async Task<RespuestaDto<LibroLeerDto>?> ActualizarAsync(int id, LibroActualizarDto dto)
     {
-        var existente = await _repositorio.ObtenerPorIdAsync(id);
-        if (existente is null) return false;
+        var libro = new Libro
+        {
+            Id = id,
+            Titulo = dto.Titulo,
+            Autor = dto.Autor,
+            AnioPublicacion = dto.AnioPublicacion,
+            Editorial = dto.Editorial,
+            Paginas = dto.Paginas,
+            Categoria = dto.Categoria,
+            Isbn = dto.Isbn
+        };
 
-        existente.Titulo = dto.Titulo;
-        existente.Autor = dto.Autor;
-        existente.AnioPublicacion = dto.AnioPublicacion;
-        existente.Editorial = dto.Editorial;
-        existente.Paginas = dto.Paginas;
-        existente.Categoria = dto.Categoria;
-        existente.Isbn = dto.Isbn;
+        var filas = await _repositorio.ActualizarAsync(libro);
 
-        return await _repositorio.ActualizarAsync(existente);
+        if (filas == 0)
+            return null;
+
+        var actualizado = await _repositorio.ObtenerPorIdAsync(id);
+
+        return new RespuestaDto<LibroLeerDto>
+        {
+            Mensaje = "El libro se actualizó correctamente",
+            Datos = new LibroLeerDto
+            {
+                Id = actualizado!.Id,
+                Titulo = actualizado.Titulo,
+                Autor = actualizado.Autor,
+                AnioPublicacion = actualizado.AnioPublicacion,
+                Editorial = actualizado.Editorial,
+                Paginas = actualizado.Paginas,
+                Categoria = actualizado.Categoria,
+                Isbn = actualizado.Isbn
+            }
+        };
     }
 
-    public async Task<bool> EliminarAsync(int id)
+
+
+    public async Task<RespuestaDto<object>?> EliminarAsync(int id)
     {
-        return await _repositorio.EliminarAsync(id);
+        var filas = await _repositorio.EliminarAsync(id);
+
+        if (filas == 0)
+            return null;
+
+        return new RespuestaDto<object>
+        {
+            Mensaje = "El libro fue eliminado correctamente",
+            Datos = null
+        };
     }
+
 
     private static LibroLeerDto MapearALeerDto(Libro l) => new()
     {
