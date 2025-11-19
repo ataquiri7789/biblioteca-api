@@ -1,7 +1,6 @@
 CREATE DATABASE biblioteca_db;
 
 
-
 CREATE TABLE IF NOT EXISTS libros (
     id               SERIAL PRIMARY KEY,
     titulo           VARCHAR(200) NOT NULL,
@@ -28,72 +27,6 @@ SELECT
     activo
 FROM libros
 WHERE activo = TRUE;
-
-
-CREATE OR REPLACE PROCEDURE sp_insertar_libro(
-    IN p_titulo           VARCHAR,
-    IN p_autor            VARCHAR,
-    IN p_anio_publicacion INT,
-    IN p_editorial        VARCHAR,
-    IN p_paginas          INT,
-    IN p_categoria        VARCHAR,
-    IN p_isbn             VARCHAR,
-    INOUT p_id            INT
-)
-LANGUAGE plpgsql
-AS $$
-BEGIN
-    INSERT INTO libros(titulo, autor, anio_publicacion, editorial, paginas, categoria, isbn)
-    VALUES(p_titulo, p_autor, p_anio_publicacion, p_editorial, p_paginas, p_categoria, p_isbn)
-    RETURNING id INTO p_id;
-END;
-$$;
-
-
-CREATE OR REPLACE PROCEDURE sp_actualizar_libro(
-    IN  p_id              INT,
-    IN  p_titulo          VARCHAR,
-    IN  p_autor           VARCHAR,
-    IN  p_anio_publicacion INT,
-    IN  p_editorial       VARCHAR,
-    IN  p_paginas         INT,
-    IN  p_categoria       VARCHAR,
-    IN  p_isbn            VARCHAR,
-    OUT p_filas_afectadas INT
-)
-LANGUAGE plpgsql
-AS $$
-BEGIN
-    UPDATE libros
-    SET titulo           = p_titulo,
-        autor            = p_autor,
-        anio_publicacion = p_anio_publicacion,
-        editorial        = p_editorial,
-        paginas          = p_paginas,
-        categoria        = p_categoria,
-        isbn             = p_isbn
-    WHERE id = p_id
-      AND activo = TRUE;
-
-    GET DIAGNOSTICS p_filas_afectadas = ROW_COUNT;
-END;
-$$;
-
-
-CREATE OR REPLACE PROCEDURE sp_eliminar_libro(
-    p_id INTEGER,
-    p_filas_afectadas OUT INTEGER
-)
-LANGUAGE plpgsql
-AS $$
-BEGIN
-    UPDATE libros
-    SET activo = FALSE
-    WHERE id = p_id;
-
-    GET DIAGNOSTICS p_filas_afectadas = ROW_COUNT;
-END;
-$$;
 
 
 
